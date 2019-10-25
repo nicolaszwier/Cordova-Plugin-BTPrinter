@@ -537,11 +537,14 @@ public class BluetoothPrinter extends CordovaPlugin {
             throws IOException {
         try {
 
-            mmOutputStreamWriter.write("\n");
-            mmOutputStreamWriter.write("\n");
-            mmOutputStreamWriter.write("\n");
+            mmOutputStreamWriter.write(10);
+            mmOutputStreamWriter.write(10);
+            mmOutputStreamWriter.write(10);
+
+            // ESC @
             mmOutputStreamWriter.write(0x1B);
             mmOutputStreamWriter.write(0x40);
+
             // // GS H = HRI position
             // mmOutputStream.write(0x1D);
             // // mmOutputStream.write("H");
@@ -569,16 +572,18 @@ public class BluetoothPrinter extends CordovaPlugin {
             // GS k
             mmOutputStreamWriter.write(0x1D); // GS
             // mmOutputStream.write("k"); // k
-            mmOutputStreamWriter.write(0x6B); // k
+            // mmOutputStreamWriter.write(0x6B); // k
+            mmOutputStreamWriter.write(107);
             // mmOutputStream.write(type);// m = barcode type 0-6
-            mmOutputStreamWriter.write(0x49);// m = barcode type 0-6 0x49 = code128
+            // mmOutputStreamWriter.write(0x49);// m = barcode type 0-6 0x49 = code128
+            mmOutputStreamWriter.write(73);// m = barcode type 0-6 0x49 = code128
             mmOutputStreamWriter.write(code.length()); // length of encoded string
             mmOutputStreamWriter.write("{C"); // {C
             // mmOutputStreamWriter.write(0x7B); // {C
             // mmOutputStreamWriter.write(0x43); // {C
             mmOutputStreamWriter.write(code);// d1-dk
             mmOutputStreamWriter.write(0);// print barcode
-
+            mmOutputStreamWriter.flush();
             // tell the user data were sent
             Log.d(LOG_TAG, "PRINT BARCODE COMMAND SENT");
             callbackContext.success("Data Sent");
