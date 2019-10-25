@@ -166,7 +166,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             return true;
         } else if (action.equals("printBarcode")) {
             try {
-                Integer code = Integer.parseInt(args.getString(0));
+                String code = args.getString(0);
                 Integer type = Integer.parseInt(args.getString(1));
                 Integer h = Integer.parseInt(args.getString(2));
                 Integer w = Integer.parseInt(args.getString(3));
@@ -530,7 +530,7 @@ public class BluetoothPrinter extends CordovaPlugin {
      *             barcode. 2 = Below barcode. 3 = Both above and below barcode.
      */
 
-    boolean printBarcode(CallbackContext callbackContext, int code, int type, int h, int w, int font, int pos)
+    boolean printBarcode(CallbackContext callbackContext, String code, int type, int h, int w, int font, int pos)
             throws IOException {
         try {
 
@@ -569,7 +569,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             // mmOutputStream.write((char) code.length()); // length of encoded string
 
             mmOutputStream.write((char) 73);
-            mmOutputStream.write(46);
+            mmOutputStream.write(code.length() + 2);
             // mmOutputStream.write((char) 123);
             // mmOutputStream.write((char) 66);
             // mmOutputStream.write((char) 78);
@@ -577,7 +577,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             // mmOutputStream.write((char) 46);
             mmOutputStream.write((char) 123);
             mmOutputStream.write((char) 67);
-            mmOutputStream.write(code);// d1-dk
+            mmOutputStream.write(code.toCharArray());// d1-dk
             // mmOutputStream.write(0);// print barcode
 
             // tell the user data were sent
