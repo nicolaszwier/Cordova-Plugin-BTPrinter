@@ -538,19 +538,19 @@ public class BluetoothPrinter extends CordovaPlugin {
             mmOutputStream.write(0x1D);
             // mmOutputStream.write("H");
             mmOutputStream.write(0x48); // H
-            mmOutputStream.write(pos); // 0=no print, 1=above, 2=below, 3=above & below
+            mmOutputStream.write((char) pos); // 0=no print, 1=above, 2=below, 3=above & below
 
             // GS f = set barcode characters
             mmOutputStream.write(0x1D);
             // mmOutputStream.write("f");
             mmOutputStream.write(0x66); // f
-            mmOutputStream.write(font);
+            mmOutputStream.write((char) font);
 
             // GS h = sets barcode height
             mmOutputStream.write(0x1D);
             // mmOutputStream.write("h");
             mmOutputStream.write(0x68); // h
-            mmOutputStream.write(h);
+            mmOutputStream.write((char) h);
 
             // GS w = sets barcode width
             mmOutputStream.write(0x1D);
@@ -558,14 +558,27 @@ public class BluetoothPrinter extends CordovaPlugin {
             mmOutputStream.write(0x77); // w
             mmOutputStream.write(w);// module = 1-6
 
-            // GS k
+            // // GS k
             mmOutputStream.write(0x1D); // GS
             // mmOutputStream.write("k"); // k
             mmOutputStream.write(0x6B); // k
-            mmOutputStream.write(type);// m = barcode type 0-6
-            mmOutputStream.write(code.length()); // length of encoded string
-            mmOutputStream.write(code.getBytes());// d1-dk
-            mmOutputStream.write(0);// print barcode
+            // mmOutputStream.write((char) type);// m = barcode type 0-6
+            // mmOutputStream.write((char) code.length()); // length of encoded string
+            // mmOutputStream.write(code.getBytes());// d1-dk
+            // mmOutputStream.write(0);// print barcode
+
+            mmOutputStream.write((char) 73);
+            mmOutputStream.write((char) 10);
+            mmOutputStream.write((char) 123);
+            mmOutputStream.write((char) 66);
+            mmOutputStream.write((char) 78);
+            mmOutputStream.write((char) 111);
+            mmOutputStream.write((char) 46);
+            mmOutputStream.write((char) 123);
+            mmOutputStream.write((char) 67);
+            mmOutputStream.write((char) 12);
+            mmOutputStream.write((char) 34);
+            mmOutputStream.write((char) 56);
 
             // tell the user data were sent
             Log.d(LOG_TAG, "PRINT BARCODE COMMAND SENT");
