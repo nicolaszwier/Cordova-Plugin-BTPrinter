@@ -164,6 +164,20 @@ public class BluetoothPrinter extends CordovaPlugin {
                 e.printStackTrace();
             }
             return true;
+        } else if (action.equals("printBarcode")) {
+            try {
+                String code = args.getString(0);
+                Integer type = Integer.parseInt(args.getString(1));
+                Integer h = Integer.parseInt(args.getString(2));
+                Integer w = Integer.parseInt(args.getString(3));
+                Integer font = Integer.parseInt(args.getString(4));
+                Integer pos = Integer.parseInt(args.getString(5));
+                printBarcode(callbackContext, code, type, h, w, font, pos);
+            } catch (IOException e) {
+                Log.e(LOG_TAG, e.getMessage());
+                e.printStackTrace();
+            }
+            return true;
         } else if (action.equals("printQRCode")) {
             try {
                 String msg = args.getString(0);
@@ -488,8 +502,69 @@ public class BluetoothPrinter extends CordovaPlugin {
             mmOutputStream.write(buffer);
             // tell the user data were sent
             Log.d(LOG_TAG, "PRINT POS COMMAND SENT");
-            // callbackContext.success("Data Sent");
-            callbackContext.success(buffer.toString());
+            callbackContext.success("Data Sent");
+            return true;
+        } catch (Exception e) {
+            String errMsg = e.getMessage();
+            Log.e(LOG_TAG, errMsg);
+            e.printStackTrace();
+            callbackContext.error(errMsg);
+        }
+        return false;
+    }
+
+    /**
+     * Encode and print barcode
+     * 
+     * @param code String to be encoded in the barcode. Different barcodes have
+     *             different requirements on the length of data that can be encoded.
+     * @param type Specify the type of barcode 65 = UPC-A. 66 = UPC-E. 67 =
+     *             JAN13(EAN). 68 = JAN8(EAN). 69 = CODE39. 70 = ITF. 71 = CODABAR.
+     *             72 = CODE93. 73 = CODE128.
+     * 
+     * @param h    height of the barcode in points (1 <= n <= 255)
+     * @param w    width of module (2 <= n <=6). Barcode will not print if this
+     *             value is too large.
+     * @param font Set font of HRI characters 0 = font A 1 = font B
+     * @param pos  set position of HRI characters 0 = not printed. 1 = Above
+     *             barcode. 2 = Below barcode. 3 = Both above and below barcode.
+     */
+
+    boolean printBarcode(CallbackContext callbackContext, String code, int type, int h, int w, int font, int pos)
+            throws IOException {
+        try {
+
+            // GS H = HRI position
+            mmOutputStream.write(0x1D);
+            mmOutputStream.write("H");
+            mmOutputStream.write(pos); // 0=no print, 1=above, 2=below, 3=above & below
+
+            // GS f = set barcode characters
+            mmOutputStream.write(0x1D);
+            mmOutputStream.write("f");
+            mmOutputStream.write(font);
+
+            // GS h = sets barcode height
+            mmOutputStream.write(0x1D);
+            mmOutputStream.write("h");
+            mmOutputStream.write(h);
+
+            // GS w = sets barcode width
+            mmOutputStream.write(0x1D);
+            mmOutputStream.write("w");
+            mmOutputStream.write(w);// module = 1-6
+
+            // GS k
+            mmOutputStream.write(0x1D); // GS
+            mmOutputStream.write("k"); // k
+            mmOutputStream.write(type);// m = barcode type 0-6
+            mmOutputStream.write(code.length()); // length of encoded string
+            mmOutputStream.write(code);// d1-dk
+            mmOutputStream.write(0);// print barcode
+
+            // tell the user data were sent
+            Log.d(LOG_TAG, "PRINT BARCODE COMMAND SENT");
+            callbackContext.success("Data Sent");
             return true;
         } catch (Exception e) {
             String errMsg = e.getMessage();
