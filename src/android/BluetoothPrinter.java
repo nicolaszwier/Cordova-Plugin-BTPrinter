@@ -569,7 +569,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             // mmOutputStream.write((char) code.length()); // length of encoded string
 
             mmOutputStream.write((char) 73);
-            mmOutputStream.write(code.length() + 2);
+            mmOutputStream.write(46);
             // mmOutputStream.write((char) 123);
             // mmOutputStream.write((char) 66);
             // mmOutputStream.write((char) 78);
