@@ -41,6 +41,7 @@ public class BluetoothPrinter extends CordovaPlugin {
     BluetoothSocket mmSocket;
     BluetoothDevice mmDevice;
     OutputStream mmOutputStream;
+    OutputStreamWriter mmOutputStreamWriter;
     InputStream mmInputStream;
     Thread workerThread;
     byte[] readBuffer;
@@ -294,6 +295,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
             mmSocket.connect();
             mmOutputStream = mmSocket.getOutputStream();
+            mmOutputStreamWriter = new OutputStreamWriter(mmOutputStream);
             mmInputStream = mmSocket.getInputStream();
             beginListenForData();
             Log.d(LOG_TAG, "BLUETOOTH OPENED: " + mmDevice.getName());
@@ -535,51 +537,49 @@ public class BluetoothPrinter extends CordovaPlugin {
         try {
 
             // ESC @
-            mmOutputStream.write(0x1B);
-            mmOutputStream.write(0x40);
+            mmOutputStreamWriter.write(0x1B);
+            mmOutputStreamWriter.write(0x40);
             // GS H = HRI position
-            mmOutputStream.write(0x1D);
+            mmOutputStreamWriter.write(0x1D);
             // mmOutputStream.write("H");
-            mmOutputStream.write(0x48); // H
-            mmOutputStream.write((char) pos); // 0=no print, 1=above, 2=below, 3=above & below
+            mmOutputStreamWriter.write(0x48); // H
+            mmOutputStreamWriter.write((char) pos); // 0=no print, 1=above, 2=below, 3=above & below
 
             // GS f = set barcode characters
-            mmOutputStream.write(0x1D);
+            mmOutputStreamWriter.write(0x1D);
             // mmOutputStream.write("f");
-            mmOutputStream.write(0x66); // f
-            mmOutputStream.write((char) font);
+            mmOutputStreamWriter.write(0x66); // f
+            mmOutputStreamWriter.write((char) font);
 
             // GS h = sets barcode height
-            mmOutputStream.write(0x1D);
+            mmOutputStreamWriter.write(0x1D);
             // mmOutputStream.write("h");
-            mmOutputStream.write(0x68); // h
-            mmOutputStream.write((char) h);
+            mmOutputStreamWriter.write(0x68); // h
+            mmOutputStreamWriter.write((char) h);
 
             // GS w = sets barcode width
-            mmOutputStream.write(0x1D);
+            mmOutputStreamWriter.write(0x1D);
             // mmOutputStream.write("w");
-            mmOutputStream.write(0x77); // w
-            mmOutputStream.write(w);// module = 1-6
+            mmOutputStreamWriter.write(0x77); // w
+            mmOutputStreamWriter.write(w);// module = 1-6
 
             // // GS k
-            mmOutputStream.write(0x1D); // GS
+            mmOutputStreamWriter.write(0x1D); // GS
             // mmOutputStream.write("k"); // k
-            mmOutputStream.write(0x6B); // k
+            mmOutputStreamWriter.write(0x6B); // k
             // mmOutputStream.write((char) type);// m = barcode type 0-6
             // mmOutputStream.write((char) code.length()); // length of encoded string
 
-            mmOutputStream.write((char) 73);
-            mmOutputStream.write(code.length() + 2);
+            mmOutputStreamWriter.write((char) 73);
+            mmOutputStreamWriter.write(code.length() + 2);
             // mmOutputStream.write((char) 123);
             // mmOutputStream.write((char) 66);
             // mmOutputStream.write((char) 78);
             // mmOutputStream.write((char) 111);
             // mmOutputStream.write((char) 46);
-            mmOutputStream.write((char) 123);
-            mmOutputStream.write((char) 67);
-            mmOutputStream.write(code.getBytes("iso-8859-1"));// d1-dk
-            mmOutputStream.write(code.getBytes("UTF-8"));// d1-dk
-            // mmOutputStream.write(0);// print barcode
+            mmOutputStreamWriter.write((char) 123);
+            mmOutputStreamWriter.write((char) 67);
+            mmOutputStreamWriter.write(code);// d1-dk
 
             // tell the user data were sent
             Log.d(LOG_TAG, "PRINT BARCODE COMMAND SENT");
