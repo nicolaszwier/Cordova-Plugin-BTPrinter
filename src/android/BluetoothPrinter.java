@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;;
+import java.io.OutputStreamWriter;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.UUID;
@@ -296,7 +296,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
             mmSocket.connect();
             mmOutputStream = mmSocket.getOutputStream();
-            mmOutputStreamWriter = mmSocket.getOutputStream();
+            mmOutputStreamWriter = new OutputStreamWriter(mmOutputStream, "UTF-8");
             mmInputStream = mmSocket.getInputStream();
             beginListenForData();
             Log.d(LOG_TAG, "BLUETOOTH OPENED: " + mmDevice.getName());
@@ -537,6 +537,9 @@ public class BluetoothPrinter extends CordovaPlugin {
             throws IOException {
         try {
 
+            mmOutputStreamWriter.write("\n");
+            mmOutputStreamWriter.write("\n");
+            mmOutputStreamWriter.write("\n");
             mmOutputStreamWriter.write(0x1B);
             mmOutputStreamWriter.write(0x40);
             // // GS H = HRI position
