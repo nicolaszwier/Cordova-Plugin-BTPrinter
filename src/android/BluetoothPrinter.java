@@ -295,7 +295,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
             mmSocket.connect();
             mmOutputStream = mmSocket.getOutputStream();
-            mmOutputStreamWriter = new OutputStreamWriter(mmOutputStream);
+            mmOutputStreamWriter = new OutputStreamWriter(mmOutputStream, "ASCII");
             mmInputStream = mmSocket.getInputStream();
             beginListenForData();
             Log.d(LOG_TAG, "BLUETOOTH OPENED: " + mmDevice.getName());
