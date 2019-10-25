@@ -534,6 +534,9 @@ public class BluetoothPrinter extends CordovaPlugin {
             throws IOException {
         try {
 
+            // ESC @
+            mmOutputStream.write(0x1B);
+            mmOutputStream.write(0x40);
             // GS H = HRI position
             mmOutputStream.write(0x1D);
             // mmOutputStream.write("H");
@@ -566,7 +569,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             // mmOutputStream.write((char) code.length()); // length of encoded string
 
             mmOutputStream.write((char) 73);
-            mmOutputStream.write((char) 10);
+            mmOutputStream.write(code.length() + 2);
             // mmOutputStream.write((char) 123);
             // mmOutputStream.write((char) 66);
             // mmOutputStream.write((char) 78);
@@ -575,7 +578,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             mmOutputStream.write((char) 123);
             mmOutputStream.write((char) 67);
             mmOutputStream.write(code.getBytes());// d1-dk
-            mmOutputStream.write(0);// print barcode
+            // mmOutputStream.write(0);// print barcode
 
             // tell the user data were sent
             Log.d(LOG_TAG, "PRINT BARCODE COMMAND SENT");
