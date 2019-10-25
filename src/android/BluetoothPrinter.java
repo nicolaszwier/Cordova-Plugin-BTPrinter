@@ -296,7 +296,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
             mmSocket.connect();
             mmOutputStream = mmSocket.getOutputStream();
-            mmOutputStreamWriter = new OutputStreamWriter(mmOutputStream, "UTF-8");
+            mmOutputStreamWriter = new OutputStreamWriter(mmOutputStream, "ISO-8859-1");
             mmInputStream = mmSocket.getInputStream();
             beginListenForData();
             Log.d(LOG_TAG, "BLUETOOTH OPENED: " + mmDevice.getName());
@@ -537,39 +537,47 @@ public class BluetoothPrinter extends CordovaPlugin {
             throws IOException {
         try {
 
-            // GS H = HRI position
-            // mmOutputStreamWriter.write(0x1D);
-            mmOutputStreamWriter.write("GS");
+            String codigo = ((char) 0x1B) + "@" + ((char) 0x1D) + ((char) 0x68) + ((char) 0xA2) + ((char) 0x1B) + "a1"
+                    + ((char) 0x1D) + ((char) 0x6B) + ((char) 0x02) + "0123456789876" + ((char) 0x00) + ((char) 0x1B)
+                    + "a0" + "\n\n\n" + ((char) 0x00);
+
+            mmOutputStream.write(codigo.getBytes());
+
+            // // GS H = HRI position
+            // // mmOutputStreamWriter.write(0x1D);
+            // mmOutputStream.write("GS");
+
+            // // mmOutputStream.write("H");
             // mmOutputStream.write("H");
-            mmOutputStreamWriter.write("H");
-            mmOutputStreamWriter.write(pos); // 0=no print, 1=above, 2=below, 3=above & below
+            // mmOutputStream.write(pos); // 0=no print, 1=above, 2=below, 3=above & below
+            // mmOutputStream.write(); // 0=no print, 1=above, 2=below, 3=above & below
 
-            // GS f = set barcode characters
-            // mmOutputStreamWriter.write(0x1D);
-            mmOutputStreamWriter.write("GS");
-            mmOutputStreamWriter.write("f");
-            mmOutputStreamWriter.write(font);
+            // // GS f = set barcode characters
+            // // mmOutputStreamWriter.write(0x1D);
+            // mmOutputStream.write("GS");
+            // mmOutputStream.write("f");
+            // mmOutputStream.write(font);
 
-            // GS h = sets barcode height
-            mmOutputStreamWriter.write("GS");
-            // mmOutputStreamWriter.write(0x1D);
-            mmOutputStreamWriter.write("h");
-            mmOutputStreamWriter.write(h);
+            // // GS h = sets barcode height
+            // mmOutputStream.write("GS");
+            // // mmOutputStreamWriter.write(0x1D);
+            // mmOutputStream.write("h");
+            // mmOutputStream.write(h);
 
-            // GS w = sets barcode width
-            mmOutputStreamWriter.write("GS");
-            // mmOutputStreamWriter.write(0x1D);
-            mmOutputStreamWriter.write("w");
-            mmOutputStreamWriter.write(w);// module = 1-6
+            // // GS w = sets barcode width
+            // mmOutputStream.write("GS");
+            // // mmOutputStreamWriter.write(0x1D);
+            // mmOutputStream.write("w");
+            // mmOutputStream.write(w);// module = 1-6
 
-            // GS k
-            mmOutputStreamWriter.write("GS");
-            // mmOutputStreamWriter.write(0x1D); // GS
-            mmOutputStreamWriter.write("k"); // k
-            mmOutputStreamWriter.write(type);// m = barcode type 0-6
-            mmOutputStreamWriter.write(code.length()); // length of encoded string
-            mmOutputStreamWriter.write(code);// d1-dk
-            mmOutputStreamWriter.write(0);// print barcode
+            // // GS k
+            // mmOutputStream.write("GS");
+            // // mmOutputStreamWriter.write(0x1D); // GS
+            // mmOutputStream.write("k"); // k
+            // mmOutputStream.write(type);// m = barcode type 0-6
+            // mmOutputStream.write(code.length()); // length of encoded string
+            // mmOutputStream.write(code);// d1-dk
+            // mmOutputStream.write(0);// print barcode
 
             // tell the user data were sent
             Log.d(LOG_TAG, "PRINT BARCODE COMMAND SENT");
