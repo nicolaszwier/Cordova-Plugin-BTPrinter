@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.UUID;
@@ -42,7 +41,6 @@ public class BluetoothPrinter extends CordovaPlugin {
     BluetoothSocket mmSocket;
     BluetoothDevice mmDevice;
     OutputStream mmOutputStream;
-    OutputStreamWriter mmOutputStreamWriter;
     InputStream mmInputStream;
     Thread workerThread;
     byte[] readBuffer;
@@ -296,7 +294,6 @@ public class BluetoothPrinter extends CordovaPlugin {
             mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
             mmSocket.connect();
             mmOutputStream = mmSocket.getOutputStream();
-            mmOutputStreamWriter = new OutputStreamWriter(mmOutputStream, "ISO-8859-1");
             mmInputStream = mmSocket.getInputStream();
             beginListenForData();
             Log.d(LOG_TAG, "BLUETOOTH OPENED: " + mmDevice.getName());
@@ -537,53 +534,43 @@ public class BluetoothPrinter extends CordovaPlugin {
             throws IOException {
         try {
 
-            String codigo = ((char) 0x1B) + "@" + ((char) 0x1D) + ((char) 0x68) + ((char) 0xA2) + ((char) 0x1B) + "a1"
-                    + ((char) 0x1D) + ((char) 0x6B) + ((char) 0x02) + "0123456789876" + ((char) 0x00) + ((char) 0x1B)
-                    + "a0" + "\n\n\n" + ((char) 0x00);
-
-            mmOutputStream.write(codigo.getBytes());
-
-            // // GS H = HRI position
-            // // mmOutputStreamWriter.write(0x1D);
-            // mmOutputStream.write("GS");
-
-            // // mmOutputStream.write("H");
+            // GS H = HRI position
+            mmOutputStream.write(0x1D);
             // mmOutputStream.write("H");
-            // mmOutputStream.write(pos); // 0=no print, 1=above, 2=below, 3=above & below
-            // mmOutputStream.write(); // 0=no print, 1=above, 2=below, 3=above & below
+            mmOutputStream.write(0x48); // H
+            mmOutputStream.write(pos); // 0=no print, 1=above, 2=below, 3=above & below
 
-            // // GS f = set barcode characters
-            // // mmOutputStreamWriter.write(0x1D);
-            // mmOutputStream.write("GS");
+            // GS f = set barcode characters
+            mmOutputStream.write(0x1D);
             // mmOutputStream.write("f");
-            // mmOutputStream.write(font);
+            mmOutputStream.write(0x66); // f
+            mmOutputStream.write(font);
 
-            // // GS h = sets barcode height
-            // mmOutputStream.write("GS");
-            // // mmOutputStreamWriter.write(0x1D);
+            // GS h = sets barcode height
+            mmOutputStream.write(0x1D);
             // mmOutputStream.write("h");
-            // mmOutputStream.write(h);
+            mmOutputStreamWriter.write(0x68); // h
+            mmOutputStream.write(h);
 
-            // // GS w = sets barcode width
-            // mmOutputStream.write("GS");
-            // // mmOutputStreamWriter.write(0x1D);
+            // GS w = sets barcode width
+            mmOutputStream.write(0x1D);
             // mmOutputStream.write("w");
-            // mmOutputStream.write(w);// module = 1-6
+            mmOutputStreamWriter.write(0x77); // w
+            mmOutputStream.write(w);// module = 1-6
 
-            // // GS k
-            // mmOutputStream.write("GS");
-            // // mmOutputStreamWriter.write(0x1D); // GS
+            // GS k
+            mmOutputStream.write(0x1D); // GS
             // mmOutputStream.write("k"); // k
-            // mmOutputStream.write(type);// m = barcode type 0-6
-            // mmOutputStream.write(code.length()); // length of encoded string
-            // mmOutputStream.write(code);// d1-dk
-            // mmOutputStream.write(0);// print barcode
+            mmOutputStreamWriter.write(0x6B); // k
+            mmOutputStream.write(type);// m = barcode type 0-6
+            mmOutputStream.write(code.length()); // length of encoded string
+            mmOutputStream.write(code.getBytes());// d1-dk
+            mmOutputStream.write(0);// print barcode
 
             // tell the user data were sent
             Log.d(LOG_TAG, "PRINT BARCODE COMMAND SENT");
             callbackContext.success("Data Sent");
             return true;
-
         } catch (Exception e) {
             String errMsg = e.getMessage();
             Log.e(LOG_TAG, errMsg);
@@ -598,7 +585,6 @@ public class BluetoothPrinter extends CordovaPlugin {
         try {
             stopWorker = true;
             mmOutputStream.close();
-            mmOutputStreamWriter.close();
             mmInputStream.close();
             mmSocket.close();
             callbackContext.success("BLUETOOTH DISCONNECT");
