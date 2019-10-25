@@ -31,6 +31,9 @@ var BTPrinter = {
     printPOSCommand: function (fnSuccess, fnError, str) {
         exec(fnSuccess, fnError, "BluetoothPrinter", "printPOSCommand", [str]);
     },
+    printBarcode: function (fnSuccess, fnError, code, type, h, w, font, pos) {
+        exec(fnSuccess, fnError, "BluetoothPrinter", "printBarcode", [code, type, h, w, font, pos]);
+    },
     printQRCode: function (fnSuccess, fnError, str) {
         exec(fnSuccess, fnError, "BluetoothPrinter", "printQRCode", [str]);
     }
