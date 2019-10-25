@@ -484,10 +484,12 @@ public class BluetoothPrinter extends CordovaPlugin {
 
     boolean printPOSCommand(CallbackContext callbackContext, byte[] buffer) throws IOException {
         try {
+
             mmOutputStream.write(buffer);
             // tell the user data were sent
             Log.d(LOG_TAG, "PRINT POS COMMAND SENT");
-            callbackContext.success("Data Sent");
+            // callbackContext.success("Data Sent");
+            callbackContext.success(buffer.toString());
             return true;
         } catch (Exception e) {
             String errMsg = e.getMessage();
