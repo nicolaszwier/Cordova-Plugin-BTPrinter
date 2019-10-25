@@ -166,7 +166,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             return true;
         } else if (action.equals("printBarcode")) {
             try {
-                String code = Integer.parseInt(args.getString(0));
+                Integer code = Integer.parseInt(args.getString(0));
                 Integer type = Integer.parseInt(args.getString(1));
                 Integer h = Integer.parseInt(args.getString(2));
                 Integer w = Integer.parseInt(args.getString(3));
