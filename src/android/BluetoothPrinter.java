@@ -562,11 +562,12 @@ public class BluetoothPrinter extends CordovaPlugin {
             mmOutputStream.write(0x1D); // GS
             // mmOutputStream.write("k"); // k
             mmOutputStream.write(0x6B); // k
-            mmOutputStream.write(type);// m = barcode type 0-6
-            mmOutputStream.write(code.length() + 2); // length of encoded string
-            mmOutputStream.write(0x7B); // {C
-            mmOutputStream.write(0x43);
-            mmOutputStream.write(code.getBytes());// d1-dk
+            // mmOutputStream.write(type);// m = barcode type 0-6
+            mmOutputStream.write(0x49);// m = barcode type 0-6 0x49 = code128
+            mmOutputStream.write(code.length()); // length of encoded string
+            mmOutputStream.write(0x7B + 0x43); // {C
+            mmOutputStream.write(code);// d1-dk
+            // mmOutputStream.write(code.getBytes());// d1-dk
             mmOutputStream.write(0);// print barcode
 
             // tell the user data were sent
