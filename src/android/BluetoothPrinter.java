@@ -30,6 +30,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Bitmap.Config;
 import android.util.Xml.Encoding;
+import sun.security.util.Length;
 import android.util.Base64;
 import java.util.ArrayList;
 import java.util.List;
@@ -568,9 +569,10 @@ public class BluetoothPrinter extends CordovaPlugin {
             // mmOutputStream.write((char) type);// m = barcode type 0-6
             // mmOutputStream.write((char) code.length()); // length of encoded string
             char[] charCode = code.toCharArray();
-
+            String teste = "#$1D'kl'#$18";
             mmOutputStream.write((char) 73);
-            mmOutputStream.write(getSize(code) + 2);
+            // mmOutputStream.write(getSize(code) + 2);
+            mmOutputStream.write(teste.getBytes());
             // mmOutputStream.write((char) 123);
             // mmOutputStream.write((char) 66);
             // mmOutputStream.write((char) 78);
@@ -585,12 +587,14 @@ public class BluetoothPrinter extends CordovaPlugin {
 
             Integer i = 0;
             Integer f = 0;
-            char[] res = new char[0];
+            Integer j = 0;
+            // char[] res = new char[0];
 
             for (i = 0; i < code.length(); i++) {
                 f = f + 2;
-                mmOutputStream.write((char) Integer.parseInt(code.substring(i, f)));//
+                mmOutputStream.write((char) Integer.parseInt(code.substring(j, f)));//
                 i++;
+                j = j + 2;
             }
 
             // mmOutputStream.write(0);// print barcode
@@ -608,20 +612,20 @@ public class BluetoothPrinter extends CordovaPlugin {
         return false;
     }
 
-    private static Integer getSize(String el) {
-        // char[] res = (char) 123 + (char) 67;
-        Integer i;
-        Integer f = 0;
-        char[] res = new char[0];
+    // private static Integer getSize(String el) {
+    // // char[] res = (char) 123 + (char) 67;
+    // Integer i;
+    // Integer f = 0;
+    // char[] res = new char[];
 
-        for (i = 0; i < el.length(); i++) {
-            f = f + 2;
-            res[res.length + 1] = (char) Integer.parseInt(el.substring(i, f));
-            i++;
-        }
+    // for (i = 0; i < el.length(); i++) {
+    // f = f + 2;
+    // res[res.length + 1] = (char) Integer.parseInt(el.substring(i, f));
+    // i++;
+    // }
 
-        return res.length;
-    }
+    // return res.length;
+    // }
 
     // disconnect bluetooth printer.
     boolean disconnectBT(CallbackContext callbackContext) throws IOException {
