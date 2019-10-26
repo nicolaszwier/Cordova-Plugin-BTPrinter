@@ -578,12 +578,12 @@ public class BluetoothPrinter extends CordovaPlugin {
             // mmOutputStream.write((char) 46);
             mmOutputStream.write((char) 123);
             mmOutputStream.write((char) 67);
-            for (int i = 0; i < charCode.length; i++) {
-                // System.out.println("char at " + i + " index is: " + ch[i]);
-                mmOutputStream.write((char) charCode[i]);//
-            }
+            // for (int i = 0; i < charCode.length; i++) {
+            // // System.out.println("char at " + i + " index is: " + ch[i]);
+            // mmOutputStream.write((char) charCode[i]);//
+            // }
 
-            Integer i;
+            Integer i = 0;
             Integer f = 0;
             char[] res = new char[0];
 
