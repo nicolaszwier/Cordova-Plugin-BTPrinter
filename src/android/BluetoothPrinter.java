@@ -540,51 +540,36 @@ public class BluetoothPrinter extends CordovaPlugin {
             mmOutputStream.write(0x40);
             // GS H = HRI position
             mmOutputStream.write(0x1D);
-            // mmOutputStream.write("H");
             mmOutputStream.write(0x48); // H
             mmOutputStream.write((char) pos); // 0=no print, 1=above, 2=below, 3=above & below
 
             // GS f = set barcode characters
             mmOutputStream.write(0x1D);
-            // mmOutputStream.write("f");
             mmOutputStream.write(0x66); // f
             mmOutputStream.write((char) font);
 
             // GS h = sets barcode height
             mmOutputStream.write(0x1D);
-            // mmOutputStream.write("h");
             mmOutputStream.write(0x68); // h
             mmOutputStream.write((char) h);
 
             // GS w = sets barcode width
             mmOutputStream.write(0x1D);
-            // mmOutputStream.write("w");
             mmOutputStream.write(0x77); // w
             mmOutputStream.write(w);// module = 1-6
 
             // // GS k
             mmOutputStream.write(0x1D); // GS
-            // mmOutputStream.write("k"); // k
             mmOutputStream.write(0x6B); // k
-            // mmOutputStream.write((char) type);// m = barcode type 0-6
             mmOutputStream.write((char) 73);
             mmOutputStream.write((char) 24); // lenght
-            // mmOutputStream.write((char) 123);
-            // mmOutputStream.write((char) 66);
-            // mmOutputStream.write((char) 78);
-            // mmOutputStream.write((char) 111);
-            // mmOutputStream.write((char) 46);
+
             mmOutputStream.write((char) 123);
             mmOutputStream.write((char) 67);
-            // for (int i = 0; i < charCode.length; i++) {
-            // // System.out.println("char at " + i + " index is: " + ch[i]);
-            // mmOutputStream.write((char) charCode[i]);//
-            // }
 
             Integer i = 0;
             Integer f = 0;
             Integer j = 0;
-            // char[] res = new char[0];
 
             for (i = 0; i < code.length(); i++) {
                 f = f + 2;
@@ -592,8 +577,6 @@ public class BluetoothPrinter extends CordovaPlugin {
                 i++;
                 j = j + 2;
             }
-
-            // mmOutputStream.write(0);// print barcode
 
             // tell the user data were sent
             Log.d(LOG_TAG, "PRINT BARCODE COMMAND SENT");
