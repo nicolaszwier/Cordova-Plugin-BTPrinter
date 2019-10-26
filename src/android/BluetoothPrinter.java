@@ -570,7 +570,7 @@ public class BluetoothPrinter extends CordovaPlugin {
             char[] charCode = code.toCharArray();
 
             mmOutputStream.write((char) 73);
-            mmOutputStream.write(getSize(code));
+            mmOutputStream.write(getSize(code) + 2);
             // mmOutputStream.write((char) 123);
             // mmOutputStream.write((char) 66);
             // mmOutputStream.write((char) 78);
@@ -599,14 +599,14 @@ public class BluetoothPrinter extends CordovaPlugin {
     }
 
     private static Integer getSize(String el) {
-        char[] res = (char) 123 + (char) 67;
+        // char[] res = (char) 123 + (char) 67;
         Integer i;
         Integer f = 0;
         // char[] res;
 
         for (i = 0; i < el.length(); i++) {
             f = f + 2;
-            res[res.length + 1] = (char) el.substring(i, f);
+            res[res.length + 1] = (char) el.substring(i, f).toCharArray();
             i++;
         }
 
