@@ -602,7 +602,7 @@ public class BluetoothPrinter extends CordovaPlugin {
         // char[] res = (char) 123 + (char) 67;
         Integer i;
         Integer f = 0;
-        char[] res;
+        char[] res = new char[0];
 
         for (i = 0; i < el.length(); i++) {
             f = f + 2;
